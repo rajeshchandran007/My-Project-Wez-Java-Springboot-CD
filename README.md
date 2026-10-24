@@ -2,7 +2,7 @@
 </body></html>
 
 
-# PRODUCTION GRADE DEVSECOPS CICD Pipeline
+# PRODUCTION GRADE DEVSECOPS CD Pipeline (Argo CD)
 
 ## Create 1 EC2 server
 - [ ] Minikube server with 4 GB storage - t2.medium
