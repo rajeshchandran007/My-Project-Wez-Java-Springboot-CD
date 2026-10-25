@@ -16,11 +16,44 @@ $ sudo apt update && sudo apt -y install docker.io
 $ curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.7/bin/linux/amd64/kubectl && chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
 
  Install Minikube
-$ curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.23.2/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+$ curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 
  Start Minikube
-$  sudo apt install conntrack
-$  minikube start --vm-driver=none
+$  sudo apt install conntrack (required incase --driver=none)
+$  minikube start --driver=docker (bridge networking)
+$  sudo minikube start --driver=none (host networking)
+
+
+$  minikube stop
+$  minikube delete
+
+Install Kind on Ubuntu
+$  [ "$(uname -m)" = "x86_64" ] && \
+$  curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+
+$  chmod +x ./kind
+$  sudo mv ./kind /usr/local/bin/kind
+
+$  kind version
+
+$   cat > kind-3node.yaml <<'EOF'
+    kind: Cluster
+    apiVersion: kind.x-k8s.io/v1alpha4
+    nodes:
+    - role: control-plane
+    - role: worker
+    - role: worker
+    EOF
+
+$  kind create cluster --name kind-cluster --config kind-3node.yaml
+
+$  kind delete cluster --name kind-cluster
+
+Port forwarding:
+$  kubectl port-forward --address=0.0.0.0 pod/nginxpod 8080:80
+$  kubectl port-forward --address=0.0.0.0 svc/nginxsvc 8080:80
+$  nohup kubectl port-forward --address=0.0.0.0 svc/nginxsvc 8080:80 & (running in the background)
 ```
 
 ## Setup ArgoCD
